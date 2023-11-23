@@ -54,17 +54,15 @@ func main() {
 
 		if line[0] == '#' {
 			title := line
-			description, err := reader.ReadString('-')
+			body, err := reader.ReadString('-')
 
 			if err != nil {
 				panic(err)
 			}
 
-			poems = append(poems, newPoem(title, description))
+			poems = append(poems, newPoem(title, body))
 		}
 	}
-
-	fmt.Println(poems)
 
 	f.Close()
 }
