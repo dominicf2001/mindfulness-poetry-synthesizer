@@ -27,22 +27,28 @@ func (poem *poem) insertInput(input string) {
 }
 
 func (poem *poem) next() {
-	for poem.currentPos != '(' {
+	if poem.promptsRemaining > 1 {
+		for poem.body[poem.currentPos] != '(' {
+			poem.currentPos++
+		}
 		poem.currentPos++
 	}
-	poem.currentPos++
 
 	i := poem.currentPos
-	for i != ')' {
+	for poem.body[i] != ')' {
 		i++
 	}
 
-	poem.currentPrompt = poem.body[poem.currentPos:(i + 1)]
+	poem.promptsRemaining--
+	poem.currentPrompt = poem.body[poem.currentPos:i]
 }
 
 func newPoem(title string, body string) *poem {
 	p := &poem{title: title, body: body}
 
+	// p.body is not inserted into,
+	// thus make up for the decrement in next() by adding 1
+	p.promptsRemaining = s.Count(p.body, "(") + 1
 	p.next()
 
 	return p
@@ -79,6 +85,11 @@ func main() {
 
 			poems = append(poems, newPoem(title, body))
 		}
+	}
+
+	for poems[0].promptsRemaining > 0 {
+		fmt.Println(poems[0].currentPrompt)
+		poems[0].next()
 	}
 
 	f.Close()
