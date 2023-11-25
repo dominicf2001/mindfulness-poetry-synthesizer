@@ -5,30 +5,47 @@ import (
 	"fmt"
 	"io"
 	"os"
+	s "strings"
 )
 
 type poem struct {
-	title         string
-	body          string
-	currentPrompt string
-	currentPos    int
+	title            string
+	body             string
+	currentPrompt    string
+	currentPos       int
+	promptsRemaining int
 }
 
 func (poem *poem) displayPrompt() {
 	fmt.Printf("Enter %s\n", poem.currentPrompt)
 }
 
-func (poem *poem) insertInput() {
+func (poem *poem) insertInput(input string) {
+	poem.body = s.Replace(poem.body, poem.currentPrompt, input, len(input))
 
+	poem.next()
 }
 
 func (poem *poem) next() {
+	for poem.currentPos != '(' {
+		poem.currentPos++
+	}
+	poem.currentPos++
 
+	i := poem.currentPos
+	for i != ')' {
+		i++
+	}
+
+	poem.currentPrompt = poem.body[poem.currentPos:(i + 1)]
 }
 
 func newPoem(title string, body string) *poem {
+	p := &poem{title: title, body: body}
 
-	return &poem{title: title, body: body}
+	p.next()
+
+	return p
 }
 
 func main() {
