@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"io"
+	"math/rand"
 	"os"
 	s "strings"
 )
@@ -31,16 +32,15 @@ func (poem *poem) next() {
 		for poem.body[poem.currentPos] != '(' {
 			poem.currentPos++
 		}
-		poem.currentPos++
-	}
 
-	i := poem.currentPos
-	for poem.body[i] != ')' {
-		i++
-	}
+		i := poem.currentPos
+		for poem.body[i] != ')' {
+			i++
+		}
 
+		poem.currentPrompt = poem.body[poem.currentPos : i+1]
+	}
 	poem.promptsRemaining--
-	poem.currentPrompt = poem.body[poem.currentPos:i]
 }
 
 func newPoem(title string, body string) *poem {
@@ -87,10 +87,19 @@ func main() {
 		}
 	}
 
-	for poems[0].promptsRemaining > 0 {
-		fmt.Println(poems[0].currentPrompt)
-		poems[0].next()
+	poem := poems[rand.Intn(len(poems))]
+
+	for poem.promptsRemaining > 0 {
+		fmt.Printf("Enter a(n) %s: ", poem.currentPrompt)
+
+		var input string
+		// prompt for user input
+		fmt.Scan(&input)
+
+		poem.insertInput(input)
 	}
+
+	fmt.Println(poem.body)
 
 	f.Close()
 }
