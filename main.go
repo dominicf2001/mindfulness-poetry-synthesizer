@@ -89,7 +89,7 @@ func main() {
 
 	poem := poems[rand.Intn(len(poems))]
 
-	fmt.Println("Use only 1-3 words in your responses.\n")
+	fmt.Println("Use only one word in your responses.\n")
 	for poem.promptsRemaining > 0 {
 		fmt.Printf("%s: ", poem.currentPrompt)
 
