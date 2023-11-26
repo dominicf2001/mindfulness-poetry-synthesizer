@@ -94,7 +94,7 @@ func main() {
 
 		var input string
 		// prompt for user input
-		fmt.Scan(&input)
+		fmt.Scanln(&input)
 
 		poem.insertInput(input)
 	}
